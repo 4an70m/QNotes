@@ -1,0 +1,89 @@
+<html>
+
+<head>
+    <link rel="stylesheet" href="slds/assets/styles/salesforce-lightning-design-system-vf.min.css" />
+	<link rel="stylesheet" href="style.css" />
+	<script src="angular.min.js"></script>
+	<script src="adminController.js"></script>
+	<script src="pouchdb-5.1.0.min.js"></script>
+	<script src="angular-sanitize.min.js"></script>
+	<style>
+		.active {margin-left: -60px;}
+	</style>
+</head>
+
+<body ng-app="app" ng-controller="ctrl" ng-keyup="$event.keyCode == 13 ? ($event.ctrlKey == true ? app.addNote() : '') : ''">	
+    <div class="slds"  >
+		<div class="slds-container--center slds-container--small">
+			<div class="slds-page-header" role="banner">
+			  <div class="slds-grid">
+				<div class="slds-col slds-has-flexi-truncate">
+				  <h1 class="slds-text-heading--medium slds-truncate" title="Quick Notes">Quick Notes</h1>
+				</div>
+				<div class="slds-col slds-no-flex slds-align-bottom">
+					<div class="slds-container--right slds-container--small">
+						<button class="slds-button slds-button--brand" ng-click="app.addNote()">Add note</button>
+					</div>
+				</div>
+			  </div>
+			</div>
+
+			<div ng-show="app.addFormVisible">
+				<div class="slds-form-element">
+				  <label class="slds-form-element__label" for="textarea-1">Note</label>
+				  <div class="slds-form-element__control">
+					<textarea id="textarea-1" ng-model="app.text" 
+						class="slds-textarea" placeholder="Enter note text" 
+						ng-keyup="$event.keyCode == 13 ? ($event.shiftKey == true ? app.saveNote() : '') : ''"
+						rows="10"
+						></textarea>
+					{{ev}}
+				  </div>
+				</div>
+				<button class="slds-button slds-button--brand width-full" ng-click="app.saveNote()">Save note</button>
+			</div>
+			
+			<div class="width-full" ng-repeat="note in app.notes" >
+				<div class="slds-card" ng-class="note.text.highlighted ? 'active' : ''">
+				  <div class="slds-card__header slds-grid">
+					<div class="slds-media slds-media--center slds-has-flexi-truncate">
+					  <div class="slds-media__body">
+						 <div class="slds-grid">
+							<div class="slds-col slds-has-flexi-truncate">
+							  <h2 class="slds-text-heading--small slds-truncate">Note#{{$index}}</h2>
+							</div>
+							<div class="slds-col slds-no-flex slds-align-bottom">
+								<div class="slds-container--right slds-container--small slds-align--top">
+									<button class="slds-button slds-button--brand slds-icon__container" style="padding: 0;" ng-click="app.hideNote($index)">
+									  <img class="slds-icon--x-small" src="slds\assets\icons\action\more_60.png"/>
+									  <span class="slds-assistive-text">Edit Icon</span>
+									</button>
+									<button class="slds-button slds-button--brand slds-icon__container" style="padding: 0;" ng-click="app.highlightNote($index)">
+									  <img class="slds-icon--x-small" src="slds\assets\icons\action\approval_60.png"/>
+									  <span class="slds-assistive-text">Edit Icon</span>
+									</button>
+									<button class="slds-button slds-button--brand slds-icon__container" style="padding: 0;" ng-click="app.editNote($index)">
+									  <img class="slds-icon--x-small" src="slds\assets\icons\action\edit_60.png"/>
+									  <span class="slds-assistive-text">Edit Icon</span>
+									</button>
+									<button class="slds-button slds-button--destructive slds-icon__container" style="padding: 0;" ng-click="app.removeNote($index)">
+									  <img class="slds-icon--x-small" src="slds\assets\icons\action\close_60.png"/>
+									  <span class="slds-assistive-text">Delete Icon</span>
+									</button>
+								</div>
+							</div>
+						  </div>
+						
+					  </div>
+					</div>
+				  </div>
+				  <div class="slds-card__body slds-col--padded" style="background-color: white;" ng-class="note.text.hidden ? 'hidden' : ''">
+					<p ng-bind-html="note.text.text"></p>
+				  </div>
+				</div>
+			</div>
+		</div>
+    </div>
+</body>
+
+</html>
